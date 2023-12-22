@@ -37,7 +37,8 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String apiResponse = callApi("https://api.nationalize.io/?name=nathaniel");
+                    String apiResponse = callApi("https://dronesim.facets-labs.com/api");
+
                     responseLabel.setText("API Response:\n" + apiResponse);
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -54,8 +55,11 @@ public class Main {
     }
 
     private String callApi(String apiUrl) throws IOException {
+        final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestProperty("Authorization", TOKEN);
 
         // Set the request method to GET
         connection.setRequestMethod("GET");
