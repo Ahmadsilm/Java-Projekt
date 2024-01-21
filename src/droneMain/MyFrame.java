@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class MyFrame extends JFrame implements ActionListener {
-	JButton buttonID, buttonManufacture, buttonSerialnumber;
+	JButton dashboard, catalog, flightDynamics, buttonID, buttonManufacture, buttonSerialnumber, refreshBtn;
 	JPanel buttonPanel, imagePanel;
 	ImageIcon DroneImage;
 
@@ -44,35 +44,66 @@ public class MyFrame extends JFrame implements ActionListener {
 		question.setText("In Which Categories do you want to search?");
 		question.setForeground(Color.GREEN);
 		question.setFont(new Font("MV Boli", Font.BOLD, 25));
-		question.setBounds(50, 100, 700, 80);
+		question.setBounds(50, 50, 700, 80);
 
 		buttonPanel = new JPanel();
-		buttonPanel.setBounds(40, 200, 180, 400);
+		buttonPanel.setBounds(40, 150, 180, 475);
 		buttonPanel.setBackground(new Color(0x424447));
 
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 25));
 
+		dashboard = new JButton("Dashboard");
+		dashboard.addActionListener(this);
+		dashboard.setPreferredSize(new Dimension(150, 50));
+		dashboard.setFocusable(false);
+		dashboard.setBackground(Color.LIGHT_GRAY);
+		dashboard.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		catalog = new JButton("Catalog");
+		catalog.addActionListener(this);
+		catalog.setPreferredSize(new Dimension(150, 50));
+		catalog.setFocusable(false);
+		catalog.setBackground(Color.LIGHT_GRAY);
+		catalog.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		flightDynamics = new JButton("Flight Dynamics");
+		flightDynamics.addActionListener(this);
+		flightDynamics.setPreferredSize(new Dimension(150, 50));
+		flightDynamics.setFocusable(false);
+		flightDynamics.setBackground(Color.LIGHT_GRAY);
+		flightDynamics.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 		buttonID = new JButton("ID");
 		buttonID.addActionListener(this);
-		buttonID.setPreferredSize(new Dimension(150, 100));
+		buttonID.setPreferredSize(new Dimension(150, 50));
 		buttonID.setFocusable(false);
 		buttonID.setBackground(Color.LIGHT_GRAY);
 		buttonID.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		buttonManufacture = new JButton("Manufacture");
 		buttonManufacture.addActionListener(this);
-		buttonManufacture.setPreferredSize(new Dimension(150, 100));
+		buttonManufacture.setPreferredSize(new Dimension(150, 50));
 		buttonManufacture.setFocusable(false);
 		buttonManufacture.setBackground(Color.LIGHT_GRAY);
 		buttonManufacture.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		buttonSerialnumber = new JButton("Serial Number");
 		buttonSerialnumber.addActionListener(this);
-		buttonSerialnumber.setPreferredSize(new Dimension(150, 100));
+		buttonSerialnumber.setPreferredSize(new Dimension(150, 50));
 		buttonSerialnumber.setFocusable(false);
 		buttonSerialnumber.setBackground(Color.LIGHT_GRAY);
 		buttonSerialnumber.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+		refreshBtn = new JButton("Refresh the database");
+		refreshBtn.addActionListener(this);
+		refreshBtn.setBounds(550, 625, 150, 50);
+		refreshBtn.setFocusable(false);
+		refreshBtn.setBackground(Color.LIGHT_GRAY);
+		refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		buttonPanel.add(dashboard);
+		buttonPanel.add(catalog);
+		buttonPanel.add(flightDynamics);
 		buttonPanel.add(buttonID);
 		buttonPanel.add(buttonManufacture);
 		buttonPanel.add(buttonSerialnumber);
@@ -81,26 +112,40 @@ public class MyFrame extends JFrame implements ActionListener {
 		this.add(question);
 		this.add(ImageLabel);
 		this.add(buttonPanel);
+		this.add(refreshBtn);
 
 		this.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == dashboard) {
+			new Dashboard();
+			this.dispose();
+		}
+		if (e.getSource() == catalog) {
+			new Catalog();
+			this.dispose();
+		}
+		if (e.getSource() == flightDynamics) {
+			new FlightDynamics();
+			this.dispose();
+		}
+		if (e.getSource() == refreshBtn) {
+
+			this.dispose();
+		}
 		if (e.getSource() == buttonID) {
 			new IdSearch();
 			this.dispose();
 		}
-
 		if (e.getSource() == buttonManufacture) {
 			new ManufactureSearch();
 			this.dispose();
 		}
-
 		if (e.getSource() == buttonSerialnumber) {
 			new SerialSearch();
 			this.dispose();
-
 		}
 	}
 }
