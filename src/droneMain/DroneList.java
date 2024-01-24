@@ -1,0 +1,363 @@
+package droneMain;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class DroneList {
+
+    // Debug für Terminal in printen
+    public void getDronesListInTerminal() {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=10";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    int id = resultObject.getInt("id");
+                    String created = resultObject.getString("created");
+                    String serialNumber = resultObject.getString("serialnumber");
+                    int carriageWeight = resultObject.getInt("carriage_weight");
+                    String carriageType = resultObject.getString("carriage_type");
+
+                    // Do something with the extracted values
+                    System.out.println("ID: " + id);
+                    System.out.println("Created: " + created);
+                    System.out.println("Serial Number: " + serialNumber);
+                    System.out.println("Carriage Weight: " + carriageWeight);
+                    System.out.println("Carriage Type: " + carriageType);
+                    System.out.println();
+                }
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+            }
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Drone Type nach ID gesucht
+    public static String[] getDroneFromID(String inputID) {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/dronetypes/" + inputID + "/?format=json";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+
+                int id = jsonResponse.getInt("id");
+                String manufacturer = jsonResponse.getString("manufacturer");
+                String typeName = jsonResponse.getString("typename");
+                int weight = jsonResponse.getInt("weight");
+                int maxSpeed = jsonResponse.getInt("max_speed");
+                int batteryCapacity = jsonResponse.getInt("battery_capacity");
+                int controlRange = jsonResponse.getInt("control_range");
+                int maxCarriage = jsonResponse.getInt("max_carriage");
+
+                String[] droneInfo = { Integer.toString(id), manufacturer, typeName, Integer.toString(weight),
+                        Integer.toString(maxSpeed), Integer.toString(batteryCapacity), Integer.toString(controlRange),
+                        Integer.toString(maxCarriage) };
+                connection.disconnect();
+
+                return droneInfo;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Alle Hersteller get
+    public static String[][] getAllManufacturers() {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/dronetypes/?format=json&limit=999";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                String[][] manufacturers = new String[resultsArray.length()][2];
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    manufacturers[i][0] = resultObject.get("id").toString();
+                    manufacturers[i][1] = resultObject.getString("manufacturer");
+                }
+
+                connection.disconnect();
+                return manufacturers;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    // Nach speziellen Hersteller suchen
+    public static String[][] getAllDronesFromManufactures(String manufacture) {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                String[][] allManufactures = getAllManufacturers();
+                String[][] dronetypesFromAllDronesList = new String[resultsArray.length()][6];
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    dronetypesFromAllDronesList[i][0] = resultObject.get("id").toString();
+                    dronetypesFromAllDronesList[i][1] = resultObject.get("dronetype").toString();
+                    dronetypesFromAllDronesList[i][2] = resultObject.get("created").toString();
+                    dronetypesFromAllDronesList[i][3] = resultObject.get("serialnumber").toString();
+                    dronetypesFromAllDronesList[i][4] = resultObject.get("carriage_weight").toString();
+                    dronetypesFromAllDronesList[i][5] = resultObject.get("carriage_type").toString();
+                }
+
+                // Find the ID of the manufacture
+                int countToManID = 0;
+                for (; countToManID < allManufactures.length; countToManID++) {
+                    if (allManufactures[countToManID][1].equals(manufacture)) {
+                        break;
+                    }
+                }
+
+                // Count how many drones are from the manufacture
+                int countReturnList = 0;
+                for (int i = 0; i < dronetypesFromAllDronesList.length; i++) {
+                    if (dronetypesFromAllDronesList[i][1].substring(47, 49).equals(allManufactures[countToManID][0])) {
+                        countReturnList++;
+                    }
+                }
+
+                // Create the return list
+                String[][] returnList = new String[countReturnList][6];
+                int j = 0;
+                for (int i = 0; i < dronetypesFromAllDronesList.length; i++) {
+                    if (dronetypesFromAllDronesList[i][1].substring(47, 49).equals(allManufactures[countToManID][0])) {
+                        returnList[j][0] = dronetypesFromAllDronesList[i][0];
+                        returnList[j][1] = dronetypesFromAllDronesList[i][1];
+                        returnList[j][2] = dronetypesFromAllDronesList[i][2];
+                        returnList[j][3] = dronetypesFromAllDronesList[i][3];
+                        returnList[j][4] = dronetypesFromAllDronesList[i][4];
+                        returnList[j][5] = dronetypesFromAllDronesList[i][5];
+                        j++;
+                    }
+                }
+
+                connection.disconnect();
+                return returnList;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Drone nach Seriennummer suchen
+    public static String[] getDroneFromSerialnumber(String serialnumber){
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+
+                String[][] allDrones = new String[resultsArray.length()][6];
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    allDrones[i][0] = resultObject.get("id").toString();
+                    allDrones[i][1] = resultObject.get("dronetype").toString();
+                    allDrones[i][2] = resultObject.get("created").toString();
+                    allDrones[i][3] = resultObject.get("serialnumber").toString();
+                    allDrones[i][4] = resultObject.get("carriage_weight").toString();
+                    allDrones[i][5] = resultObject.get("carriage_type").toString();
+                }
+
+                // Get Drone from Serialnumber
+                String[] returnStringArray = new String[6];
+                for (String[] indiviualDrone : allDrones) {
+                    if (indiviualDrone[3].equals(serialnumber)) {
+                        returnStringArray = indiviualDrone;
+                        break;
+                    }
+                }
+
+                // Print Drone
+                for (String s : returnStringArray) {
+                    System.out.println(s);
+                }
+
+                connection.disconnect();
+                return returnStringArray;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+}

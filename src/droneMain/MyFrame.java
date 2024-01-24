@@ -73,7 +73,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		flightDynamics.setBackground(Color.LIGHT_GRAY);
 		flightDynamics.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		buttonID = new JButton("ID");
+		buttonID = new JButton("Drone Type ID");
 		buttonID.addActionListener(this);
 		buttonID.setPreferredSize(new Dimension(150, 50));
 		buttonID.setFocusable(false);
