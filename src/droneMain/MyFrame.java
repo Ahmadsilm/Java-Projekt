@@ -96,7 +96,7 @@ public class MyFrame extends JFrame implements ActionListener {
 
 		refreshBtn = new JButton("Refresh the database");
 		refreshBtn.addActionListener(this);
-		refreshBtn.setBounds(550, 625, 150, 50);
+		refreshBtn.setBounds(500, 600, 150, 50);
 		refreshBtn.setFocusable(false);
 		refreshBtn.setBackground(Color.LIGHT_GRAY);
 		refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -132,8 +132,7 @@ public class MyFrame extends JFrame implements ActionListener {
 			this.dispose();
 		}
 		if (e.getSource() == refreshBtn) {
-
-			this.dispose();
+			new DroneList();
 		}
 		if (e.getSource() == buttonID) {
 			new IdSearch();
