@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class MyFrame extends JFrame implements ActionListener {
-	JButton dashboard, catalog, flightDynamics, buttonID, buttonManufacture, buttonSerialnumber, refreshBtn;
+	JButton dashboard, flightDynamics, buttonID, buttonManufacture, buttonSerialnumber;
 	JPanel buttonPanel, imagePanel;
 	ImageIcon DroneImage;
 
@@ -59,13 +59,6 @@ public class MyFrame extends JFrame implements ActionListener {
 		dashboard.setBackground(Color.LIGHT_GRAY);
 		dashboard.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		catalog = new JButton("Catalog");
-		catalog.addActionListener(this);
-		catalog.setPreferredSize(new Dimension(150, 50));
-		catalog.setFocusable(false);
-		catalog.setBackground(Color.LIGHT_GRAY);
-		catalog.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 		flightDynamics = new JButton("Flight Dynamics");
 		flightDynamics.addActionListener(this);
 		flightDynamics.setPreferredSize(new Dimension(150, 50));
@@ -94,15 +87,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		buttonSerialnumber.setBackground(Color.LIGHT_GRAY);
 		buttonSerialnumber.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		refreshBtn = new JButton("Refresh the database");
-		refreshBtn.addActionListener(this);
-		refreshBtn.setBounds(500, 600, 150, 50);
-		refreshBtn.setFocusable(false);
-		refreshBtn.setBackground(Color.LIGHT_GRAY);
-		refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 		buttonPanel.add(dashboard);
-		buttonPanel.add(catalog);
 		buttonPanel.add(flightDynamics);
 		buttonPanel.add(buttonID);
 		buttonPanel.add(buttonManufacture);
@@ -112,7 +97,6 @@ public class MyFrame extends JFrame implements ActionListener {
 		this.add(question);
 		this.add(ImageLabel);
 		this.add(buttonPanel);
-		this.add(refreshBtn);
 
 		this.setVisible(true);
 	}
@@ -123,16 +107,9 @@ public class MyFrame extends JFrame implements ActionListener {
 			new Dashboard();
 			this.dispose();
 		}
-		if (e.getSource() == catalog) {
-			new Catalog();
-			this.dispose();
-		}
 		if (e.getSource() == flightDynamics) {
 			new FlightDynamics();
 			this.dispose();
-		}
-		if (e.getSource() == refreshBtn) {
-			new DroneList();
 		}
 		if (e.getSource() == buttonID) {
 			new IdSearch();

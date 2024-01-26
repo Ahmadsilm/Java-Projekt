@@ -70,7 +70,6 @@ public class DroneList {
         }
     }
 
-
     // Drone Type nach ID gesucht
     public static String[] getDroneFromID(String inputID) {
         try {
@@ -285,7 +284,7 @@ public class DroneList {
     }
 
     // Drone nach Seriennummer suchen
-    public static String[] getDroneFromSerialnumber(String serialnumber){
+    public static String[] getDroneFromSerialnumber(String serialnumber) {
         try {
             // Replace the URL with your API endpoint
             String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
@@ -316,7 +315,6 @@ public class DroneList {
                 // Parse the JSON response
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray resultsArray = jsonResponse.getJSONArray("results");
-
 
                 String[][] allDrones = new String[resultsArray.length()][6];
 
@@ -360,4 +358,129 @@ public class DroneList {
         return null;
 
     }
+
+    public static String[][] getAllDrones() {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                String[][] resultsString = new String[resultsArray.length()][6];
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    resultsString[i][0] = resultObject.get("id").toString();
+                    resultsString[i][1] = resultObject.get("dronetype").toString();
+                    resultsString[i][2] = resultObject.getString("created");
+                    resultsString[i][3] = resultObject.getString("serialnumber");
+                    resultsString[i][4] = resultObject.get("carriage_weight").toString();
+                    resultsString[i][5] = resultObject.getString("carriage_type");
+                }
+
+                connection.disconnect();
+
+                return resultsString;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+            }
+
+            // Close the connection
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String[] getDroneDynamic(String idSearchString) {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/dronedynamics/" + idSearchString + "/?format=json";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+
+                String[] resultsString = new String[12];
+
+                resultsString[0] = jsonResponse.get("drone").toString();
+                resultsString[1] = jsonResponse.get("timestamp").toString();
+                resultsString[2] = jsonResponse.get("speed").toString();
+                resultsString[3] = jsonResponse.get("align_roll").toString();
+                resultsString[4] = jsonResponse.get("align_pitch").toString();
+                resultsString[5] = jsonResponse.get("align_yaw").toString();
+                resultsString[6] = jsonResponse.get("longitude").toString();
+                resultsString[7] = jsonResponse.get("latitude").toString();
+                resultsString[8] = jsonResponse.get("battery_status").toString();
+                resultsString[9] = jsonResponse.get("last_seen").toString();
+                resultsString[10] = jsonResponse.get("last_seen").toString();
+                resultsString[11] = jsonResponse.get("status").toString();
+
+                connection.disconnect();
+
+                return resultsString;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+            }
+
+            // Close the connection
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

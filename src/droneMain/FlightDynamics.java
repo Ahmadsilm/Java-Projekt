@@ -2,66 +2,130 @@ package droneMain;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class FlightDynamics extends JFrame implements ActionListener {
 
-    ArrayList<DroneDynamic> droneDynamicList = new ArrayList<DroneDynamic>();
+    JButton mainpageButton, searchButton;
+
+    JPanel answerPanel, titlePanel, buttonPanel;
+
+    JLabel titleLabel, imageLabel;
+
+    ImageIcon droneImage;
+
+    JTextField ID;
+
+    JTable droneTable;
 
     FlightDynamics() {
         this.setSize(700, 700);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
+        this.setLayout(null);
         this.setResizable(false);
         this.getContentPane().setBackground(new Color(0x2d2e30));
 
-        droneDynamicList.add(
-                new DroneDynamic(86832, "Dec. 26, 2023, 6:32 p.m.",
-                        new Drone(72, "Snaptain: S5C", "Dec. 27, 2023, 9:07 a.m.", "SnS5-2030-360F05", 73, "ACT"), 0,
-                        0.00, 0.00, 42.00, 8.678137129, 50.107668121, 0, "Dec. 26, 2023, 6:07 p.m.", false));
-        droneDynamicList.add(
-                new DroneDynamic(86833, "Dec. 26, 2023, 6:32 p.m.",
-                        new Drone(72, "Snaptain: S5C", "Dec. 27, 2023, 9:07 a.m.", "SnS5-2030-360F05", 73, "ACT"), 0,
-                        0.00, 0.00, 235.00, 8.276398911, 49.998956812, 0, "Dec. 26, 2023, 6:07 p.m.", false));
-        // droneDynamicList
-        // .add(new DroneDynamic(72, "Snaptain: S5C", "Dec. 27, 2023, 9:07 a.m.",
-        // "SnS5-2030-360F05", 73, "ACT"));
+        titleLabel = new JLabel();
+        titleLabel.setText("Dashboard");
+        titleLabel.setForeground(Color.GREEN);
+        titleLabel.setFont(new Font("MV Boli", Font.BOLD, 30));
 
+        ID = new JTextField();
+        ID.setBounds(200, 100, 300, 50);
+
+        mainpageButton = new JButton("Menu");
+        mainpageButton.addActionListener(this);
+        mainpageButton.setPreferredSize(new Dimension(150, 70));
+        mainpageButton.setFocusable(false);
+        mainpageButton.setBackground(Color.LIGHT_GRAY);
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(this);
+        searchButton.setPreferredSize(new Dimension(150, 70));
+        searchButton.setFocusable(false);
+        searchButton.setBackground(Color.LIGHT_GRAY);
+
+        titlePanel = new JPanel();
+        titlePanel.setBounds(0, 0, 700, 80);
+        titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(new Color(0x2b2b2e));
+        titlePanel.add(titleLabel);
+
+        buttonPanel = new JPanel();
+        buttonPanel.setBounds(0, 150, 700, 120);
+        buttonPanel.setBackground(new Color(0x2d2e30));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 25));
+        buttonPanel.add(mainpageButton);
+        buttonPanel.add(searchButton);
+
+        // Create a default table model with column names
         DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("ID");
-        model.addColumn("Timestamp");
-        model.addColumn("Drone");
-        model.addColumn("Speed");
-        model.addColumn("Alignment Roll");
-        model.addColumn("Control Range");
-        model.addColumn("Alignment Yaw");
-        model.addColumn("Longitude");
-        model.addColumn("Latitude");
-        model.addColumn("Battery Status");
-        model.addColumn("Status");
+        model.setColumnIdentifiers(
+                new Object[] { "Drone", "Timestamp", "Speed", "Align Roll", "Align Pitch", "Align Yaw","Longitude","Latitude","Battery Status", "Last Seen","Status"});
 
-        for (DroneDynamic droneDynamic : droneDynamicList) {
-            model.addRow(new Object[] { droneDynamic.ID, droneDynamic.Timestamp, droneDynamic.drone, droneDynamic.speed,
-                    droneDynamic.alignmentRoll, droneDynamic.controlRange, droneDynamic.alignmentYaw,
-                    droneDynamic.longitude, droneDynamic.latitude, droneDynamic.batteryStatus, droneDynamic.status });
-        }
-        JTable table = new JTable(model);
-        JScrollPane scrollpane = new JScrollPane(table);
+        // Create the table using the model
+        droneTable = new JTable(model);
+        droneTable.setBackground(Color.WHITE);
+        droneTable.setForeground(Color.BLACK);
 
-        this.add(scrollpane, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(droneTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
 
+        answerPanel = new JPanel();
+        answerPanel.setBounds(0, 250, 700, 350);
+        answerPanel.setBackground(new Color(0x2d2e30));
+        answerPanel.setLayout(new BorderLayout()); // Set BorderLayout for answerPanel
+        answerPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the center
+
+
+        this.add(answerPanel);
+
+        this.add(titlePanel);
+        this.add(buttonPanel);
+        this.add(ID);
         this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == searchButton) {
+            // Call your getDroneFromID function
+            String inputID = ID.getText();
+            String[] droneInfo = DroneList.getDroneDynamic(inputID);
 
+            // Add the data to the table
+            if (droneInfo != null) {
+                DefaultTableModel model = (DefaultTableModel) droneTable.getModel();
+                model.setRowCount(0); // Clear previous data
+
+                // Add a new row to the table
+                model.addRow(droneInfo);
+            } else {
+                JOptionPane.showMessageDialog(null, "This ID do not exist!", "Information",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (e.getSource() == mainpageButton) {
+            new MyFrame();
+            this.dispose();
+        }
     }
 
 }

@@ -1,8 +1,8 @@
 {
-    "java.dependency.syncWithFolderExplorer": true,
-    "java.dependency.packagePresentation": "hierarchical",
-    "java.project.outputPath": "bin",
-    "java.project.sourcePaths": [
-        "src/"
-    ]
+  "java.dependency.syncWithFolderExplorer": true,
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.project.outputPath": "bin",
+  "java.project.sourcePaths": [
+    "src/"
+  ],
 }
