@@ -5,10 +5,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -16,8 +13,6 @@ import javax.swing.table.DefaultTableModel;
 public class Dashboard extends JFrame implements ActionListener {
 
     ArrayList<Drone> droneList = new ArrayList<Drone>();
-    JPanel panel;
-    JButton back, refresh;
 
     Dashboard() {
         this.setSize(700, 700);
@@ -44,44 +39,16 @@ public class Dashboard extends JFrame implements ActionListener {
             model.addRow(new Object[] { drone.ID, drone.droneType, drone.createdDate, drone.serialNumber,
                     drone.carriageWeight, drone.carriageWeight });
         }
-
         JTable table = new JTable(model);
         JScrollPane scrollpane = new JScrollPane(table);
 
-        back = new JButton("Back");
-        back.setBounds(0, 0, 100, 35);
-        back.setFocusable(false);
-        back.addActionListener(this);
-        refresh = new JButton("Refresh");
-        refresh.setBounds(585, 0, 100, 35);
-        refresh.setFocusable(false);
-        refresh.addActionListener(this);
-        scrollpane.setBounds(0, 50, 700, 650);
-
-        panel = new JPanel();
-        panel.setBounds(0, 0, 700, 700);
-        panel.setLayout(null);
-
-        panel.add(scrollpane);
-        panel.add(refresh);
-        panel.add(back);
-
-        // this.add(scrollpane, BorderLayout.CENTER);
-        this.add(panel);
+        this.add(scrollpane, BorderLayout.CENTER);
 
         this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == back) {
-            new MyFrame();
-            this.dispose();
-        }
-
-        if (e.getSource() == refresh) {
-            new DroneList();
-        }
 
     }
 
