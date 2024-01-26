@@ -86,7 +86,7 @@ public class SerialSearch extends JFrame implements ActionListener {
         // Create a default table model with column names
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(new Object[] { "ID", "Drone Type", "Created", "Serialnumber", "Carriage Weight",
-                "Carriage Type"});
+                "Carriage Type" });
 
         // Create the table using the model
         droneTable = new JTable(model);
@@ -115,10 +115,12 @@ public class SerialSearch extends JFrame implements ActionListener {
         if (e.getSource() == mainpageButton) {
             new MyFrame();
             this.dispose();
+        } else if (e.getSource() == resetButton) {
+            ID.setText("");
         } else if (e.getSource() == searchButton) {
             // Call your getDroneFromID function
             String inputID = ID.getText();
-            String[] droneInfo = DroneList.getDroneFromSerialnumber(inputID);;
+            String[] droneInfo = DroneList.getDroneFromSerialnumber(inputID);
 
             // Add the data to the table
             if (droneInfo != null) {

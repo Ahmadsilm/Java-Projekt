@@ -116,6 +116,9 @@ public class ManufactureSearch extends JFrame implements ActionListener {
         if (e.getSource() == mainpageButton) {
             new MyFrame();
             this.dispose();
+        } else if (e.getSource() == resetButton) {
+            ID.setText("");
+
         } else if (e.getSource() == searchButton) {
             // Get manufacturer name from the text field
             String manufacturer = ID.getText();
