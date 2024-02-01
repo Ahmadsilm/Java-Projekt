@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Dashboard extends JFrame implements ActionListener {
 
-    JButton mainpageButton;
+    JButton backpageButton;
 
     JPanel answerPanel, titlePanel, buttonPanel;
 
@@ -32,10 +32,11 @@ public class Dashboard extends JFrame implements ActionListener {
     JTable droneTable;
 
     Dashboard() {
-        this.setSize(700, 700);
+        this.setSize(900, 900);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setResizable(false);
+        this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(new Color(0x2d2e30));
 
         titleLabel = new JLabel();
@@ -43,23 +44,23 @@ public class Dashboard extends JFrame implements ActionListener {
         titleLabel.setForeground(Color.GREEN);
         titleLabel.setFont(new Font("MV Boli", Font.BOLD, 30));
 
-        mainpageButton = new JButton("Menu");
-        mainpageButton.addActionListener(this);
-        mainpageButton.setPreferredSize(new Dimension(150, 70));
-        mainpageButton.setFocusable(false);
-        mainpageButton.setBackground(Color.LIGHT_GRAY);
+        backpageButton = new JButton("Back");
+        backpageButton.addActionListener(this);
+        backpageButton.setPreferredSize(new Dimension(100, 35));
+        backpageButton.setFocusable(false);
+        backpageButton.setBackground(Color.LIGHT_GRAY);
 
         titlePanel = new JPanel();
-        titlePanel.setBounds(0, 0, 700, 80);
+        titlePanel.setBounds(0, 0, 900, 80);
         titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         titlePanel.setBackground(new Color(0x2b2b2e));
         titlePanel.add(titleLabel);
 
         buttonPanel = new JPanel();
-        buttonPanel.setBounds(0, 100, 700, 120);
+        buttonPanel.setBounds(0, 100, 700, 50);
         buttonPanel.setBackground(new Color(0x2d2e30));
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 25));
-        buttonPanel.add(mainpageButton);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        buttonPanel.add(backpageButton);
 
         // Create a default table model with column names
         DefaultTableModel model = new DefaultTableModel();
@@ -77,7 +78,7 @@ public class Dashboard extends JFrame implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(600, 500));
 
         answerPanel = new JPanel();
-        answerPanel.setBounds(0, 250, 700, 350);
+        answerPanel.setBounds(0, 150, 900, 750);
         answerPanel.setBackground(new Color(0x2d2e30));
         answerPanel.setLayout(new BorderLayout()); // Set BorderLayout for answerPanel
         answerPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the center
@@ -105,7 +106,7 @@ public class Dashboard extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainpageButton) {
+        if (e.getSource() == backpageButton) {
             new MyFrame();
             this.dispose();
         }

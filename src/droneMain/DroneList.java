@@ -364,6 +364,7 @@ public class DroneList {
             // Replace the URL with your API endpoint
             String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
             final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+            
 
             // Make the HTTP request
             URL url = new URL(apiUrl);
@@ -451,7 +452,7 @@ public class DroneList {
                 // Parse the JSON response
                 JSONObject jsonResponse = new JSONObject(response.toString());
 
-                String[] resultsString = new String[12];
+                String[] resultsString = new String[11];
 
                 resultsString[0] = jsonResponse.get("drone").toString();
                 resultsString[1] = jsonResponse.get("timestamp").toString();
@@ -463,8 +464,7 @@ public class DroneList {
                 resultsString[7] = jsonResponse.get("latitude").toString();
                 resultsString[8] = jsonResponse.get("battery_status").toString();
                 resultsString[9] = jsonResponse.get("last_seen").toString();
-                resultsString[10] = jsonResponse.get("last_seen").toString();
-                resultsString[11] = jsonResponse.get("status").toString();
+                resultsString[10] = jsonResponse.get("status").toString();
 
                 connection.disconnect();
 
@@ -477,6 +477,168 @@ public class DroneList {
             }
 
             // Close the connection
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static String[][] getAllDroneDynamic() {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/drones/?format=json&limit=999";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                String[][] flightDynamics = new String[resultsArray.length()][2];
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    flightDynamics[i][0] = resultObject.get("id").toString();;
+                    flightDynamics[i][1] = resultObject.getString("serialnumber");
+                    
+                }
+                
+
+                connection.disconnect();
+                return flightDynamics;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public static String[][] getHistoricalAnalysis(String serialnumber) {
+        try {
+            // Replace the URL with your API endpoint
+            String apiUrl = "http://dronesim.facets-labs.com/api/dronedynamics/?format=json&limit=3625";
+            final String TOKEN = "Token 0572346481df5e740a17b02c4404a9abfe033264";
+
+            // Make the HTTP request
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", TOKEN);
+            connection.setRequestMethod("GET");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Speichern zu String line
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                reader.close();
+
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray resultsArray = jsonResponse.getJSONArray("results");
+
+                String[][] allFlightIds = getAllDroneDynamic();
+                String[][] allFlightsFromDroneDynamics = new String[resultsArray.length()][11];
+
+                // Extract values from the results array
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.getJSONObject(i);
+                    allFlightsFromDroneDynamics[i][0] = resultObject.get("drone").toString();
+                    allFlightsFromDroneDynamics[i][1] = resultObject.get("timestamp").toString();
+                    allFlightsFromDroneDynamics[i][2] = resultObject.get("speed").toString();
+                    allFlightsFromDroneDynamics[i][3] = resultObject.get("align_roll").toString();
+                    allFlightsFromDroneDynamics[i][4] = resultObject.get("align_pitch").toString();
+                    allFlightsFromDroneDynamics[i][5] = resultObject.get("align_yaw").toString();
+                    allFlightsFromDroneDynamics[i][6] = resultObject.get("longitude").toString();
+                    allFlightsFromDroneDynamics[i][7] = resultObject.get("latitude").toString();
+                    allFlightsFromDroneDynamics[i][8] = resultObject.get("battery_status").toString();
+                    allFlightsFromDroneDynamics[i][9] = resultObject.get("last_seen").toString();
+                    allFlightsFromDroneDynamics[i][10] = resultObject.get("status").toString();
+                }
+
+                 // Find the ID of the manufacture
+                 int countToManID = 0;
+                 for (; countToManID < allFlightIds.length; countToManID++) {
+                     if (allFlightIds[countToManID][1].equals(serialnumber)) {
+                         break;
+                     }
+                 }
+                
+
+                 int countReturnList = 0;
+                 for (int i = 0; i < allFlightsFromDroneDynamics.length; i++) {
+                     if (allFlightsFromDroneDynamics[i][0].substring(43, 45).equals(allFlightIds[countToManID][0])) {
+                         countReturnList++;
+                     }
+                 }
+
+                // Create the return list
+                String[][] returnList = new String[countReturnList][11];
+                int j = 0;
+                for (int i = 0; i < allFlightsFromDroneDynamics.length; i++) {
+                    if (allFlightsFromDroneDynamics[i][0].substring(43, 45).equals(allFlightIds[countToManID][0])) {
+                        returnList[j][0] = allFlightsFromDroneDynamics[i][0];
+                        returnList[j][1] = allFlightsFromDroneDynamics[i][1];
+                        returnList[j][2] = allFlightsFromDroneDynamics[i][2];
+                        returnList[j][3] = allFlightsFromDroneDynamics[i][3];
+                        returnList[j][4] = allFlightsFromDroneDynamics[i][4];
+                        returnList[j][5] = allFlightsFromDroneDynamics[i][5];
+                        returnList[j][6] = allFlightsFromDroneDynamics[i][6];
+                        returnList[j][7] = allFlightsFromDroneDynamics[i][7];
+                        returnList[j][8] = allFlightsFromDroneDynamics[i][8];
+                        returnList[j][9] = allFlightsFromDroneDynamics[i][9];
+                        returnList[j][10] = allFlightsFromDroneDynamics[i][10];
+                        j++;
+                    }
+                }
+
+                connection.disconnect();
+                return returnList;
+
+            } else {
+                System.out.println("HTTP Request failed with response code: " + responseCode);
+                connection.disconnect();
+                return null;
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

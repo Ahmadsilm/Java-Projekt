@@ -1,10 +1,5 @@
 package droneMain;
 
-import java.awt.Color;
-
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,6 +13,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
 public class IdSearch extends JFrame implements ActionListener {
 	
@@ -34,10 +36,11 @@ public class IdSearch extends JFrame implements ActionListener {
     JTable droneTable;
 	
 	IdSearch(){
-		this.setSize(700,700);
+		this.setSize(900,900);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.setResizable(false);
+		this.setLocationRelativeTo(null);
 		this.getContentPane().setBackground(new Color(0x2d2e30));
 		
 		titleLabel = new JLabel();
@@ -47,11 +50,11 @@ public class IdSearch extends JFrame implements ActionListener {
 		
 		IDLabel = new JLabel("ID: ");
 		IDLabel.setFont(new Font("MV Boli",Font.PLAIN,30));
-		IDLabel.setBounds(100,150,100,80);
+		IDLabel.setBounds(200,80,100,80);
 		IDLabel.setForeground(Color.GREEN);
 		
 		ID = new JTextField();
-		ID.setBounds(200,170,300,50);
+		ID.setBounds(300,100,300,50);
 		
 		mainpageButton= new JButton("Menu");
 		mainpageButton.addActionListener(this);
@@ -74,19 +77,22 @@ public class IdSearch extends JFrame implements ActionListener {
 		resetButton.setBackground(Color.LIGHT_GRAY);
 		
 		
-		titlePanel= new JPanel();
-		titlePanel.setBounds(0,0,700,80);
-		titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		titlePanel.setBackground(new Color(0x2b2b2e));
-		titlePanel.add(titleLabel);
-		
-		buttonPanel= new JPanel();
-		buttonPanel.setBounds(0,250,700,120);
-		buttonPanel.setBackground(new Color(0x2d2e30));
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,25,25));
-		buttonPanel.add(mainpageButton);
-		buttonPanel.add(searchButton);
-		buttonPanel.add(resetButton);
+		titlePanel = new JPanel();
+        titlePanel.setBounds(0, 0, 900, 80);
+        titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(new Color(0x2b2b2e));
+        titlePanel.add(titleLabel);
+
+
+
+         buttonPanel = new JPanel();
+        buttonPanel.setBounds(0, 150, 900, 120);
+        buttonPanel.setBackground(new Color(0x2d2e30));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 25));
+        buttonPanel.add(mainpageButton);
+        buttonPanel.add(searchButton);
+        buttonPanel.add(resetButton);
+
 
         // Create a default table model with column names
         DefaultTableModel model = new DefaultTableModel();
@@ -101,9 +107,10 @@ public class IdSearch extends JFrame implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(600, 200));
 
         answerPanel = new JPanel();
-        answerPanel.setBounds(0, 400, 700, 200);
+		answerPanel.setBounds(0, 250, 900, 750);
         answerPanel.setBackground(new Color(0x2d2e30));
-        answerPanel.add(scrollPane);
+		answerPanel.setLayout(new BorderLayout() );
+        answerPanel.add(scrollPane,BorderLayout.CENTER);
 
         this.add(answerPanel);
 
@@ -135,7 +142,9 @@ public class IdSearch extends JFrame implements ActionListener {
         } else if(e.getSource()== mainpageButton) {
 			new MyFrame();
 			this.dispose();
-		}		
+		} else if(e.getSource() == resetButton){
+				ID.setText("");
+		}
 	}
 	
 }
